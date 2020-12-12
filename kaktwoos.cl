@@ -5,7 +5,7 @@ unsigned char extract(const unsigned int heightMap[], int id);
 void increase(unsigned int heightMap[], int id, int val);
 
 #define WANTED_CACTUS_HEIGHT 20
-kernel void crack(global int *data, global ulong* answer, global int FLOOR_LEVEL)
+kernel void crack(global int *data, global ulong* answer, global int* FLOOR_LEVEL)
 {
 	int id = get_global_id(0);
 	ulong originalSeed = (((ulong)data[0] * (ulong)data[1] + (ulong)id) << 4) | data[8];
@@ -32,14 +32,14 @@ kernel void crack(global int *data, global ulong* answer, global int FLOOR_LEVEL
 		initialPosZ = next(&seed, 4) + 8;
 		initialPos = initialPosX + initialPosZ * 32;
 
-		short terrainHeight = (extract(heightMap, initialPos) + FLOOR_LEVEL + 1) * 2;
+		short terrainHeight = (extract(heightMap, initialPos) + *FLOOR_LEVEL + 1) * 2;
 		initialPosY = nextIntUnknown(&seed, terrainHeight);
 
-		if (initialPosY + 3 <= FLOOR_LEVEL && initialPosY - 3 >= 0) {
+		if (initialPosY + 3 <= *FLOOR_LEVEL && initialPosY - 3 >= 0) {
 			seed = (seed * 256682821044977UL + 233843537749372UL) & ((1UL << 48) - 1);
 			continue;
 		}
-		if (initialPosY - 3 > top + FLOOR_LEVEL + 1) {
+		if (initialPosY - 3 > top + *FLOOR_LEVEL + 1) {
 			for (int j = 0; j < 10; j++) {
 				seed = (seed * 76790647859193UL + 25707281917278UL) & ((1UL << 48) - 1);
 				nextIntUnknown(&seed, nextInt(&seed, 3) + 1);
@@ -53,7 +53,7 @@ kernel void crack(global int *data, global ulong* answer, global int FLOOR_LEVEL
 			posZ = initialPosZ + next(&seed, 3) - next(&seed, 3);
 			posMap = posX + posZ * 32;
 
-			if (position == -1 && posY > FLOOR_LEVEL && posY <= FLOOR_LEVEL + data[7] + 1) {
+			if (position == -1 && posY > *FLOOR_LEVEL && posY <= *FLOOR_LEVEL + data[7] + 1) {
 				if (posMap == data[3]) {
 					position = 0;
 				} else if (posMap == data[4]) {
@@ -76,16 +76,16 @@ kernel void crack(global int *data, global ulong* answer, global int FLOOR_LEVEL
 				}
 			}
 
-			if (posY <= extract(heightMap, posMap) + FLOOR_LEVEL) continue;
+			if (posY <= extract(heightMap, posMap) + *FLOOR_LEVEL) continue;
 
 			short offset = 1 + nextIntUnknown(&seed, nextInt(&seed, 3) + 1);
 
 			for (short j = 0; j < offset; j++) {
-				if ((posY + j - 1) > extract(heightMap, posX + posZ * 32) + FLOOR_LEVEL || posY < 0) continue;
-				if ((posY + j) <= extract(heightMap, (posX + 1) + posZ * 32) + FLOOR_LEVEL) continue;
-				if ((posY + j) <= extract(heightMap, (posX - 1) + posZ * 32) + FLOOR_LEVEL) continue;
-				if ((posY + j) <= extract(heightMap, posX + (posZ + 1) * 32) + FLOOR_LEVEL) continue;
-				if ((posY + j) <= extract(heightMap, posX + (posZ - 1) * 32) + FLOOR_LEVEL) continue;
+				if ((posY + j - 1) > extract(heightMap, posX + posZ * 32) + *FLOOR_LEVEL || posY < 0) continue;
+				if ((posY + j) <= extract(heightMap, (posX + 1) + posZ * 32) + *FLOOR_LEVEL) continue;
+				if ((posY + j) <= extract(heightMap, (posX - 1) + posZ * 32) + *FLOOR_LEVEL) continue;
+				if ((posY + j) <= extract(heightMap, posX + (posZ + 1) * 32) + *FLOOR_LEVEL) continue;
+				if ((posY + j) <= extract(heightMap, posX + (posZ - 1) * 32) + *FLOOR_LEVEL) continue;
 
 				increase(heightMap, posMap, 1);
 
