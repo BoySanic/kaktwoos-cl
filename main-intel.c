@@ -103,14 +103,15 @@ boinc_set_min_checkpoint_period(30);
     }
 
     fprintf(stderr,"Received work unit: %" SCNd64 "\n", chunkSeed);
-    fprintf(stderr,"Data: n1: %d, n2: %d, n3: %d, di: %d, ch: %d\n",
+    fprintf(stderr,"Data: n1: %d, n2: %d, n3: %d, di: %d, ch: %d, floor_level: %d\n",
         neighbor1,
         neighbor2,
         neighbor3,
         diagonalIndex,
-        cactusHeight);
+        cactusHeight,
+        floor_level);
 
-    int arguments[10] = {
+    int arguments[11] = {
         0,
         0,
         0,
@@ -120,7 +121,8 @@ boinc_set_min_checkpoint_period(30);
         diagonalIndex,
         cactusHeight,
         chunkSeedBottom4Bits,
-        chunkSeedBit5
+        chunkSeedBit5,
+        floor_level
     };
 
     fflush(stderr);
@@ -175,10 +177,8 @@ boinc_set_min_checkpoint_period(30);
     // 16 Kb of memory for seeds
     cl_mem seeds = clCreateBuffer(context, CL_MEM_READ_WRITE, seedbuffer_size , NULL, &err);
     check(err, "clCreateBuffer (seeds) ");
-    cl_mem data =  clCreateBuffer(context, CL_MEM_READ_ONLY, 10 * sizeof(int), NULL, &err);
+    cl_mem data =  clCreateBuffer(context, CL_MEM_READ_ONLY, 11 * sizeof(int), NULL, &err);
     check(err, "clCreateBuffer (data) ");
-    cl_mem floor_height = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(int), NULL, &err);
-    check(err, "clCreateBuffer (floor_height) ");
 
     cl_program program = clCreateProgramWithSource(
             context,
@@ -204,12 +204,7 @@ boinc_set_min_checkpoint_period(30);
 
     check(clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&data), "clSetKernelArg (0) ");
     check(clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&seeds), "clSetKernelArg (1) ");
-    check(clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *)&floor_level), "clSetKernelarg (2) ");
-    int heightArr[1] = {
-        floor_level
-    };
-    check(clEnqueueWriteBuffer(command_queue, floor_height, CL_TRUE, 0, sizeof(int), heightArr, 0, NULL, NULL), "clEnqueueWriteBuffer ");
-    
+
     size_t work_unit_size = 1048576;
     size_t block_size = 256;
 
@@ -254,11 +249,11 @@ boinc_set_min_checkpoint_period(30);
 
         arguments[0] =  block + start / work_unit_size;
 
-        check(clEnqueueWriteBuffer(command_queue, data, CL_TRUE, 0, 10 * sizeof(int), arguments, 0, NULL, NULL), "clEnqueueWriteBuffer ");
+        check(clEnqueueWriteBuffer(command_queue, data, CL_TRUE, 0, 11 * sizeof(int), arguments, 0, NULL, NULL), "clEnqueueWriteBuffer ");
         check(clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &work_unit_size, &block_size, 0, NULL, NULL), "clEnqueueNDRangeKernel ");
 
-        int *data_out = (int *)malloc(sizeof(int) * 10);
-        check(clEnqueueReadBuffer(command_queue, data, CL_TRUE, 0, sizeof(int) * 10, data_out, 0, NULL, NULL), "clEnqueueReadBuffer (data) ");
+        int *data_out = (int *)malloc(sizeof(int) * 11);
+        check(clEnqueueReadBuffer(command_queue, data, CL_TRUE, 0, sizeof(int) * 11, data_out, 0, NULL, NULL), "clEnqueueReadBuffer (data) ");
 
         int seed_count = data_out[2];
         seedbuffer_size = sizeof(cl_ulong) + sizeof(cl_ulong) * seed_count;
