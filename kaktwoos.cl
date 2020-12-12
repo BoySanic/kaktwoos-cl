@@ -10,7 +10,7 @@ kernel void crack(global int *data, global ulong* answer)
 	int id = get_global_id(0);
 	ulong originalSeed = (((ulong)data[0] * (ulong)data[1] + (ulong)id) << 4) | data[8];
 	ulong seed = originalSeed;
-	int FLOOR_LEVEL = data[11];
+	int FLOOR_LEVEL = data[10];
 	short position = -1;
 	short posMap;
 	short posX, posY, posZ;
