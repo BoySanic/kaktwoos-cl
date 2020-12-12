@@ -139,6 +139,8 @@ boinc_set_min_checkpoint_period(30);
     cl_platform_id platform_id = NULL;
     cl_device_id device_ids;
     cl_int err;
+    cl_uint num_devices_standalone;
+    num_devices_standalone = 0;
     cl_uint num_entries;
     num_entries = 1;
     // Third arg has 2 for AMD
