@@ -8,7 +8,7 @@ jobs:
     runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v2
-    - uses: msys2/setup-msys2@v1
+    - uses: msys2/setup-msys2@v2
     - name: setup
       run: |
        msys2 wget https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/files/1406216/lightOCLSDK.zip -O amdocl.zip
