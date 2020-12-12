@@ -151,6 +151,11 @@ boinc_set_min_checkpoint_period(30);
             return 1;
         }
     #else
+    retval = clGetPlatformIDs(num_entries, &platform_id, &num_devices_standalone);
+        if (retval) {
+            fprintf(stderr, "Error: clGetPlatformIDs() failed with error %d\n", retval);
+            return 1;
+        }
     retval = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_entries, &device_ids, &num_devices_standalone);
         if (retval) {
             fprintf(stderr, "Error: clGetDeviceIDs() failed with error %d\n", retval);
