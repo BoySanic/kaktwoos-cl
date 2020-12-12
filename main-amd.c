@@ -139,7 +139,8 @@ boinc_set_min_checkpoint_period(30);
     cl_platform_id platform_id = NULL;
     cl_device_id device_ids;
     cl_int err;
-
+    cl_uint num_entries;
+    num_entries = 1;
     // Third arg has 2 for AMD
     #ifdef BOINC
     retval = boinc_get_opencl_ids(argc, argv, 2, &device_ids, &platform_id);
@@ -148,7 +149,7 @@ boinc_set_min_checkpoint_period(30);
             return 1;
         }
     #else
-    retval = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device_ids, 1);
+    retval = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_entries, &device_ids, &num_devices_standalone);
     #endif
     cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform_id, 0};
 
