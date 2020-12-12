@@ -56,7 +56,7 @@ boinc_set_min_checkpoint_period(30);
     int diagonalIndex = 0;
     int cactusHeight = 0;
     int retval = 0;
-
+    int floor_level = 63;
     char *strend;
     size_t seedbuffer_size;
 
@@ -95,6 +95,8 @@ boinc_set_min_checkpoint_period(30);
             diagonalIndex = atoi(argv[i + 1]);
         } else if (strcmp(param, "-ch") == 0 || strcmp(param, "--cactusheight") == 0) {
             cactusHeight = atoi(argv[i + 1]);
+        } else if (strcmp(param, "-fl") == 0 || strcmp(param, "--floorlevel") == 0){
+            floor_level = atoi(argv[i + 1]);
         } else {
             printf("Unknown parameter: %s\n", param);
         }
@@ -160,6 +162,8 @@ boinc_set_min_checkpoint_period(30);
     check(err, "clCreateBuffer (seeds) ");
     cl_mem data =  clCreateBuffer(context, CL_MEM_READ_ONLY, 10 * sizeof(int), NULL, &err);
     check(err, "clCreateBuffer (data) ");
+    cl_mem floor_height = clCreatebuff(context, CL_MEM_READ_ONLY, sizeof(int), NULL, &err);
+    check(err, "clCreateBuffer (floor_height) ");
 
     cl_program program = clCreateProgramWithSource(
             context,
@@ -185,7 +189,8 @@ boinc_set_min_checkpoint_period(30);
 
     check(clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&data), "clSetKernelArg (0) ");
     check(clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&seeds), "clSetKernelArg (1) ");
-
+    check(clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *)&floor_level, "clSetKernelarg (2) ");
+    
     size_t work_unit_size= 4194304;
     size_t block_size = 64;
 

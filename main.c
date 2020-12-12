@@ -56,7 +56,7 @@ boinc_set_min_checkpoint_period(30);
     int diagonalIndex = 0;
     int cactusHeight = 0;
     int retval = 0;
-
+    int floor_level = 63;
     char *strend;
     size_t seedbuffer_size;
 
@@ -95,6 +95,8 @@ boinc_set_min_checkpoint_period(30);
             diagonalIndex = atoi(argv[i + 1]);
         } else if (strcmp(param, "-ch") == 0 || strcmp(param, "--cactusheight") == 0) {
             cactusHeight = atoi(argv[i + 1]);
+        } else if (strcmp(param, "-fl") == 0 || strcmp(param, "--floorlevel") == 0){
+            floor_level = atoi(argv[i + 1]);
         } else {
             printf("Unknown parameter: %s\n", param);
         }
