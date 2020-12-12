@@ -162,7 +162,7 @@ boinc_set_min_checkpoint_period(30);
     check(err, "clCreateBuffer (seeds) ");
     cl_mem data =  clCreateBuffer(context, CL_MEM_READ_ONLY, 10 * sizeof(int), NULL, &err);
     check(err, "clCreateBuffer (data) ");
-    cl_mem floor_height = clCreatebuff(context, CL_MEM_READ_ONLY, sizeof(int), NULL, &err);
+    cl_mem floor_height = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(int), NULL, &err);
     check(err, "clCreateBuffer (floor_height) ");
 
     cl_program program = clCreateProgramWithSource(
