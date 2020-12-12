@@ -11,9 +11,8 @@ jobs:
     - uses: msys2/setup-msys2@v2
     - name: setup
       run: |
-#       msys2 wget https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/files/1406216/lightOCLSDK.zip -O amdocl.zip
        jar xf amdocl.zip 
-      
+#       msys2 wget https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/files/1406216/lightOCLSDK.zip -O amdocl.zip
     - name: build
       run: |
        echo "D:\a\kaktwoos-cl\kaktwoos-cl\lib\x86_64\;D:\a\kaktwoos-cl\kaktwoos-cl\include\" >> $GITHUB_PATH
