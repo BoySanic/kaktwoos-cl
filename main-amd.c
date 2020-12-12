@@ -190,7 +190,11 @@ boinc_set_min_checkpoint_period(30);
     check(clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&data), "clSetKernelArg (0) ");
     check(clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&seeds), "clSetKernelArg (1) ");
     check(clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *)&floor_level), "clSetKernelarg (2) ");
-
+    int heightArr[1] = {
+        floor_level
+    };
+    check(clEnqueueWriteBuffer(command_queue, &floor_height, CL_TRUE, 0, sizeof(int), heightArr, 0, NULL, NULL), "clEnqueueWriteBuffer ");
+    
     size_t work_unit_size= 4194304;
     size_t block_size = 64;
 
