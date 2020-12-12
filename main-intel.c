@@ -152,6 +152,10 @@ boinc_set_min_checkpoint_period(30);
         }
     #else
     retval = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_entries, &device_ids, &num_devices_standalone);
+        if (retval) {
+            fprintf(stderr, "Error: clGetDeviceIDs() failed with error %d\n", retval);
+            return 1;
+        }
     #endif
     cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform_id, 0};
 
