@@ -148,7 +148,7 @@ boinc_set_min_checkpoint_period(30);
             return 1;
         }
     #else
-    retval = clGetDeviceIDs(&platform_id, CL_DEVICE_TYPE_GPU, 1, &device_ids, 1);
+    retval = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device_ids, 1);
     #endif
     
     cl_context_properties cps[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform_id, 0};
