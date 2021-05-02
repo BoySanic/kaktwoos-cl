@@ -104,7 +104,9 @@ boinc_set_min_checkpoint_period(30);
     }
 
     fprintf(stderr,"Received work unit: %" SCNd64 "\n", chunkSeed);
-    fprintf(stderr,"Data: n1: %d, n2: %d, n3: %d, di: %d, ch: %d, f: %d\n",
+    fprintf(stderr,"Data: start: %lld end: %lld n1: %d, n2: %d, n3: %d, di: %d, ch: %d, f: %d\n",
+        start,
+        end,
         neighbor1,
         neighbor2,
         neighbor3,
@@ -254,14 +256,14 @@ boinc_set_min_checkpoint_period(30);
      }
      else {
 
-	boinc_begin_critical_section();
+	    boinc_begin_critical_section();
         struct checkpoint_vars data_store;
 
-	fread(&data_store, sizeof(data_store), 1, checkpoint_data);
+	    fread(&data_store, sizeof(data_store), 1, checkpoint_data);
         offset = data_store.offset;
-	start = data_store.start;
+	    start = data_store.start;
         block = data_store.block;
-	elapsed_chkpoint = data_store.elapsed_chkpoint;
+	    elapsed_chkpoint = data_store.elapsed_chkpoint;
         total_seed_count = data_store.total_seed_count;
 
         fread(found_seeds, sizeof(cl_ulong), total_seed_count, checkpoint_data);

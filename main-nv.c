@@ -104,7 +104,9 @@ boinc_set_min_checkpoint_period(30);
     }
 
     fprintf(stderr,"Received work unit: %" SCNd64 "\n", chunkSeed);
-    fprintf(stderr,"Data: n1: %d, n2: %d, n3: %d, di: %d, ch: %d, f: %d\n",
+    fprintf(stderr,"Data: start: %lld end: %lld n1: %d, n2: %d, n3: %d, di: %d, ch: %d, f: %d\n",
+        start,
+        end,
         neighbor1,
         neighbor2,
         neighbor3,
